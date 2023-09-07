@@ -1,0 +1,40 @@
+package com.example.corinthians.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.corinthians.dtos.IdoloRequestDTO;
+import com.example.corinthians.idolo.Idolo;
+import com.example.corinthians.repository.IdolosRepository;
+
+@RestController
+@RequestMapping("idolos")
+public class IdolosController {
+    @Autowired
+    private IdolosRepository repository;
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping
+    public void saveIdolo(@RequestBody IdoloRequestDTO data){
+        Idolo newIdolo = new Idolo(data);
+        repository.save(newIdolo);
+        return;
+    }
+    
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping
+    public List<IdoloRequestDTO> getAll(){
+        List<IdoloRequestDTO> idolosLista = repository.findAll()
+    .stream()
+    .map(idolo -> new IdoloRequestDTO(idolo.getNome(), idolo.getImage(), idolo.getQuantidadeTitulos()))
+    .toList();
+        return idolosLista;
+    }
+}
