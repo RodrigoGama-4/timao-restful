@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.corinthians.domain.idolo.Idolo;
 import com.example.corinthians.dtos.IdoloRequestDTO;
 import com.example.corinthians.dtos.IdolosDTO;
-import com.example.corinthians.idolo.Idolo;
 import com.example.corinthians.repository.IdolosRepository;
 
 @RestController
