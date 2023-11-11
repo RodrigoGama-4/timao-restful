@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.corinthians.domain.user.LoginResponseDTO;
 import com.example.corinthians.domain.user.User;
 import com.example.corinthians.dtos.AuthenticationDTO;
 import com.example.corinthians.dtos.RegisterDTO;
+import com.example.corinthians.infra.security.TokenService;
 import com.example.corinthians.repository.UserRepository;
 
 @RestController
@@ -28,12 +30,17 @@ public class AuthenticationController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid AuthenticationDTO data ){
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data ){
         var userNameSenha = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
         var auth = this.authenticationManager.authenticate(userNameSenha);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User)auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
