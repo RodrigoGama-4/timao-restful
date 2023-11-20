@@ -1,7 +1,5 @@
 package com.example.corinthians.services;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -27,6 +25,7 @@ public class MailService {
         simpleMailMessage.setText("Seja bem vindo a nossa aplicação. Espero que você tenha uma ótima experiência.");
         simpleMailMessage.setTo(data.email());
 
+        mailSender.send(simpleMailMessage);
 
         return "Email enviado com sucesso";
     }
