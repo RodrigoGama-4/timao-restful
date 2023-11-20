@@ -1,6 +1,8 @@
 package com.example.corinthians.controller;
 
 
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +22,16 @@ import com.example.corinthians.dtos.AuthenticationDTO;
 import com.example.corinthians.dtos.RegisterDTO;
 import com.example.corinthians.infra.security.TokenService;
 import com.example.corinthians.repository.UserRepository;
+import com.example.corinthians.services.MailService;
 
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private UserRepository repository;
@@ -51,6 +57,8 @@ public class AuthenticationController {
         User user = new User(data.email(), senhaEncript, data.role());
 
         this.repository.save(user);
+        // Enviar o e-mail de forma assíncrona
+        CompletableFuture.runAsync(() -> mailService.senderMail(data));
 
         return ResponseEntity.ok().build();
     }
